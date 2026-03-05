@@ -94,8 +94,8 @@ const displayTrees = (data) => {
 
                             </div>
 
-                            <div class="card-actions justify-end">
-                                <button class="btn bg-green-700 text-white w-full rounded-full ">Add to Cart</button>
+                            <div class="card-actions justify-end" onclick="addToCart(${tree.id}, '${tree.name}', ${tree.price})">
+                                <button class="btn btn-cart bg-green-700 text-white w-full rounded-full ">Add to Cart</button>
                             </div>
                         </div>
                     </div> 
@@ -162,12 +162,124 @@ async function openTreeModal(id) {
   const modalPrice = document.getElementById("modalPrice");
   const modalDescription = document.getElementById("modalDescription");
   const modalCategoryy = document.getElementById("modalCategory");
-
+  const modalid = document.getElementById('modalID');
 
   modalTITILE.textContent = plantDetails.name;
   modalImage.src = plantDetails.image;
   modalCategoryy.textContent = plantDetails.category;
   modalDescription.textContent = plantDetails.description;
   modalPrice.textContent = plantDetails.price;
+  modalid.textContent = plantDetails.id;
   tree_modal.showModal();
 }
+
+let cart = [];
+
+function isEmptyCart()
+{
+    const emptyMsg = document.getElementById('Empty');
+    if(cart.length===0)
+    {
+        
+        emptyMsg.classList.remove('hidden');
+    }
+    else
+    {
+        emptyMsg.classList.add('hidden');
+    }
+}
+
+function addToCart(id, name, price) {
+  //   console.log(id,name, price);
+
+  let product = {
+    id,
+    name,
+    price,
+    quantity:1
+  };
+
+    let existingItem = cart.find(item => item.id === id);
+
+  if (existingItem) {
+    existingItem.quantity++;   // increase quantity
+  } 
+  else {
+    cart.push(product);
+  }
+  renderCart();
+  isEmptyCart();
+}
+
+function renderCart() {
+  const theCart = document.getElementById("cart-item-container");
+  theCart.innerHTML = "";
+
+  for (p of cart) {
+    const cartDiv = document.createElement("div");
+
+    cartDiv.innerHTML = `
+
+            <div class="card shadow-xl p-2 bg-green-100 border border-green-600 rounded-md mx-2">
+
+                            <div class="flex justify-between items-center">
+                                <h2 class="font-bold text-green-800">${p.name}</h2>
+                                <button onclick="removeFromCard(${p.id})" class="btn btn-ghost"><i class="fa-solid fa-xmark"></i></button>
+                            </div>
+                            <p class="text-gray-600">
+                                <span class="text-green-700 font-bold">${p.price}</span> x <span>${p.quantity}</span>
+                            </p>
+
+                            <div class="flex justify-end">
+                                <p id="card-total" class="font-bold text-lg">${p.price*p.quantity}</p>
+                            </div>
+
+                        </div>
+        
+        `;
+    theCart.prepend(cartDiv);
+    renderTotal(cart);
+  }
+}
+
+
+function removeFromCard(id)
+{
+    cart = cart.filter((item) => item.id != id);
+    renderCart();
+    renderTotal(cart);
+    isEmptyCart();
+}
+
+
+function renderTotal(cart)
+{
+    let totalPrice = 0;
+
+    for(let p of cart)
+    {
+        totalPrice += (p.price*p.quantity);
+    }
+
+    document.getElementById('sub-total').innerText = totalPrice;
+}
+
+
+const xy = document.getElementById('btn-cart-modal').addEventListener('click', function(){
+
+
+        const name = document.getElementById('modalTitle').innerText;
+        const price = document.getElementById('modalPrice').innerText;
+        const id = document.getElementById('modalID').innerText;
+
+        
+      
+        
+
+        addToCart(id,name,price);
+      
+    
+
+
+
+})
