@@ -117,22 +117,19 @@
             <h1 class="text-center font-bold text-3xl text-green-900 pt-14 pb-14">Choose Your Trees</h1>
 
 
-            <div id="main-container" class=" grid grid-cols-12 gap-12 w-11/12 mx-auto">
-                <div class="categories col-span-2 shadow-sm shadow-emerald-200">
+            <div id="main-container" class=" grid grid-cols-1 md:grid-cols-12 gap-12 w-11/12 mx-auto">
+                <div class="categories md:col-span-2 shadow-sm shadow-emerald-200 ">
 
                     <h2 class="font-bold text-2xl mb-3">Categories</h2>
 
-                    <div class="space-y-3">
+                    <div class="space-y-3 flex flex-wrap">
 
-                        <div>
-                            <button id="btn-all-trees"
-                                class="btn bg-green-800 text-white border-0 w-full justify-start">All
-                                Trees</button>
-                        </div>
+                        <button onclick="selectCategory(0, this)" class="mrb font-bold flex px-3 py-2 btn_primary w-full justify-start
+                     hover:bg-green-100 rounded">All Trees</button>
 
 
 
-                        <div id="categories-container" class="space-y-3">
+                        <div id="categories-container" class="space-y-3 md:flex flex-col">
 
                             <!-- Manually Category likha lagbe na, Category API theke ashbe.-->
                             <!-- Ei Div e category gulo ene rakhbo -->
@@ -147,7 +144,7 @@
                 </div>
 
                 <!-- Cards -->
-                <div id="" class=" col-span-7 ">
+                <div id="" class=" col-span-8 ">
 
                     <!-- All trees are coming here dynamically -->
 
@@ -172,9 +169,10 @@
 
 
 
-                <div class="shopping-cart col-span-3 border">
+                <div class="shopping-cart col-span-2 border bg-white rounded-xl max-h-300">
 
-                    <h1 class="text-center font-bold text-2xl text-green-900 p-5">Your Cart</h1>
+                    <h1 class="text-center font-bold text-xl text-green-900 p-5 ">Your Cart <i
+                            class="fa-solid fa-cart-shopping"></i> </h1>
 
                     <div id="cart-item-container">
 
@@ -188,6 +186,70 @@
             </div>
 
 
+
+
+        </section>
+
+
+
+        <section id="product-details-modal">
+
+
+            <!-- Open the modal using ID.showModal() method -->
+            <button class="btn" onclick="tree_modal.showModal()">open modal</button>
+            <dialog id="tree_modal" class="modal">
+                <div class="modal-box">
+
+
+                    <div class="flex justify-between items-start mb-4">
+                        <h3 class="font-bold text-2xl text-green-700" id="modalTitle">Tree Details</h3>
+                        <button onclick="document.getElementById('tree_modal').close()"
+                            class="btn btn-sm btn-circle btn-ghost"><i class="fa-solid fa-x"></i></button>
+                    </div>
+
+
+                    <div class="gap-6">
+                        <img src="./assets/hero-leaf1.png" alt="" class="w-full !h-[250px] object-cover rounded-xl"
+                            id="modalImage">
+                    </div>
+
+                    <div class="">
+
+                        <p class="text-sm text-gray-500 mb-2 mt-4">
+                            <span class="font-bold">Category</span>
+                            <span id="modalCategory"
+                                class="bage badge-primary p-2 border rounded-full border-green-600 font-bold text-green-700 bg-green-400"></span>
+                        </p>
+
+                        <p class="text-sm text-gray-500 mb-4">
+                            <span id="modalDescription"></span>
+                        </p>
+
+                        <div class="flex items-baseline gap-2 mb-6">
+
+
+
+
+                            <span class="text-3xl font-bold text-green-600">$</span> <span id="modalPrice"
+                                class="text-3xl">0</span>
+
+
+                        </div>
+
+                    </div>
+
+                    <div class="modal-action">
+                        <form method="dialog">
+                            <!-- if there is a button in form, it will close the modal -->
+                            <div class="">
+                                <button class="btn btn_primary m-3">Add to Cart</button>
+                                <button class="btn hover:bg-red-200">Close</button>
+                            </div>
+
+                        </form>
+                    </div>
+                </div>
+            </dialog>
 
 
         </section>

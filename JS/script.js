@@ -2,8 +2,21 @@
 
 // Loading Categories Dynamically
 
-function selectCategory(id) {
-  // console.log(id); now I have the ids. Ebar ekta common function lagbe ja id wise tree show korbe.
+function selectCategory(id, button) {
+  const x = document.querySelectorAll(".btn_primary");
+
+  x.forEach((el) => {
+    el.classList.remove("btn_primary");
+  });
+
+  button.classList.add("btn_primary");
+
+  if (id == 0) {
+    loadAllTrees();
+    return;
+  }
+
+  loadTreesByCategory(id);
 }
 
 async function loadCategories() {
@@ -16,14 +29,17 @@ async function loadCategories() {
   const data = await res.json();
 
   data.categories.forEach((category) => {
-    const category_button = document.createElement("div");
+    const category_button = document.createElement("button");
 
     category_button.innerHTML = `
-             <div>
-                    <button onclick="selectCategory(${category.id})"  id="btn-all-trees" class="btn bg-green-50 text-black border-0 w-full justify-start
-                     hover:bg-green-100">${category.category_name}</button>
-            </div>
+             
+                    <button class="mrb font-bold flex px-3 py-2   w-full justify-start
+                       rounded">${category.category_name}</button>
+            
         `;
+
+    category_button.onclick = () =>
+      selectCategory(category.id, category_button);
 
     categroiesContainer.append(category_button);
   });
@@ -55,23 +71,23 @@ async function loadAllTrees() {
 }
 
 const displayTrees = (data) => {
+  allTreeContainer.innerHTML = "";
   for (tree of data) {
     const treeDiv = document.createElement("div");
 
     treeDiv.innerHTML = `
              <div class="card bg-base-100 shadow-2xl"> 
                         <figure class="max-h-[200px] object-cover">
-                            <img src="${tree.image}"
+                            <img onclick="openTreeModal(${tree.id})" src="${tree.image}"
                                 alt="Shoes" />
                         </figure>
                         <div class="card-body">
-                            <h2 class="card-title">${tree.name}</h2>
-                            <p class="line-clamp-3">A card component has a figure, a body part, and inside body there are title and actions
-                                parts</p>
+                            <h2 class="card-title hover:cursor-pointer" onclick="openTreeModal(${tree.id})">${tree.name}</h2>
+                            <p  onclick="openTreeModal(${tree.id})" class="line-clamp-3 hover:cursor-pointer ">${tree.description}</p>
 
 
                             <div class="flex justify-between">
-                                <div class="badge badge-soft badge-success font-bold outline">${tree.category}</div>
+                                <div class="badge badge-soft badge-success font-bold outline" onclick="openTreeModal(${tree.id})">${tree.category}</div>
                                 <div class="price font-bold text-xl">
                                     <h6>৳${tree.price}</h6>
                                 </div>
@@ -110,4 +126,48 @@ function showSpinner(isTrue) {
 
     allTrees.classList.remove("hidden");
   }
+}
+async function loadTreesByCategory(id) {
+  // console.log(id);
+  showSpinner(true);
+
+  const url = `https://openapi.programming-hero.com/api/category/${id}`;
+
+  const res = await fetch(url);
+
+  const data = await res.json();
+
+  console.log(data);
+
+  displayTrees(data.plants);
+  showSpinner(false);
+}
+
+async function openTreeModal(id) {
+  // console.log(id);
+
+  const url = `https://openapi.programming-hero.com/api/plant/${id}`;
+
+  const res = await fetch(url);
+
+  const data = await res.json();
+
+  const plantDetails = data.plants;
+
+  console.log(plantDetails);
+
+  const modalTITILE = document.getElementById("modalTitle");
+  const modalImage = document.getElementById("modalImage");
+
+  const modalPrice = document.getElementById("modalPrice");
+  const modalDescription = document.getElementById("modalDescription");
+  const modalCategoryy = document.getElementById("modalCategory");
+
+
+  modalTITILE.textContent = plantDetails.name;
+  modalImage.src = plantDetails.image;
+  modalCategoryy.textContent = plantDetails.category;
+  modalDescription.textContent = plantDetails.description;
+  modalPrice.textContent = plantDetails.price;
+  tree_modal.showModal();
 }
