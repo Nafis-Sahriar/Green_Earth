@@ -33,8 +33,8 @@ async function loadCategories() {
 
     category_button.innerHTML = `
              
-                    <button class="mrb font-bold flex px-3 py-2   w-full justify-start
-                       rounded">${category.category_name}</button>
+                    <button class="mrb font-bold flex px-3 py-2 justify-start
+                       rounded border-green-500 hover:bg-green-200 ">${category.category_name}</button>
             
         `;
 
